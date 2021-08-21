@@ -1,11 +1,21 @@
 package com.zareanmasoud.rnaccessibilityservice;
 
+import android.content.Context;
+import android.content.Intent;
+import android.view.accessibility.AccessibilityManager;
+import android.accessibilityservice.AccessibilityServiceInfo;
+import android.accessibilityservice.AccessibilityService;
+import android.provider.Settings;
+import android.content.pm.ServiceInfo;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.Promise;
 
+import java.util.List;
 import javax.annotation.Nullable;
 
 public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
@@ -30,9 +40,8 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void checkAccessibilitySettings() {
-        // TODO: Promise()
-        return isAccessibilityServiceEnabled();
+    public void checkAccessibilitySettings(Promise promise) {
+        promise.resolve(AccessibilityServiceModule.isAccessibilityServiceEnabled(reactContext, MyAccessibilityService.class));
     }
 
     // TODO: should be non-static
