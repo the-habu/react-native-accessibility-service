@@ -1,10 +1,9 @@
 package com.zareanmasoud.rnaccessibilityservice;
 
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import javax.annotation.Nullable;
@@ -25,8 +24,15 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sampleMethod(String stringArgument, int numberArgument, Callback callback) {
-        callback.invoke("Received number: " + numberArgument + " string: " + stringArgument);
+    public void navigateToAccessibilitySettings() {
+        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        reactContext.startActivity(intent);
+    }
+
+    @ReactMethod
+    public void checkAccessibilitySettings() {
+        // TODO: Promise()
+        return isAccessibilityServiceEnabled();
     }
 
     // TODO: should be non-static
@@ -35,13 +41,29 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
             String eventName,
             @Nullable String params
     ) {
-      reactContext
-          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-          .emit(eventName, params);
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
     }
 
     // TODO: should be non-static
     public static void prepareEvent(String params) {
-            sendEvent(reactContext, "EventReminder", params);
+        sendEvent(reactContext, "EventReminder", params);
+    }
+
+    private static boolean isAccessibilityServiceEnabled(Context context, Class<? extends AccessibilityService> service) {
+        AccessibilityManager am = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        List<AccessibilityServiceInfo> enabledServices = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
+
+        for (AccessibilityServiceInfo enabledService : enabledServices) {
+            ServiceInfo enabledServiceInfo = enabledService.getResolveInfo().serviceInfo;
+            if (enabledServiceInfo.packageName.equals(context.getPackageName()) && enabledServiceInfo.name.equals(service.getName())) {
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
