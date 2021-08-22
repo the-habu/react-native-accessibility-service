@@ -2,6 +2,7 @@ package com.zareanmasoud.rnaccessibilityservice;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.accessibility.AccessibilityManager;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.accessibilityservice.AccessibilityService;
@@ -36,7 +37,12 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void navigateToAccessibilitySettings() {
         Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-        reactContext.startActivity(intent);
+        reactContext.getCurrentActivity().startActivity(intent);
+
+        // Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        // Uri uri = Uri.fromParts("package", reactContext.getCurrentActivity().getPackageName(), null);
+        // intent.setData(uri);
+        // reactContext.getCurrentActivity().startActivityForResult(intent, 1338);
     }
 
     @ReactMethod
