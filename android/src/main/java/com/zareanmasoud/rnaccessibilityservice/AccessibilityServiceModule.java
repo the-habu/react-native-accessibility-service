@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.accessibility.AccessibilityManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.accessibilityservice.AccessibilityService;
 import android.provider.Settings;
@@ -37,28 +38,19 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void navigateToAccessibilitySettings() {
         Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        // startActivityForResult never worked for me...
         reactContext.getCurrentActivity().startActivity(intent);
-
-        // Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-        // Uri uri = Uri.fromParts("package", reactContext.getCurrentActivity().getPackageName(), null);
-        // intent.setData(uri);
-        // reactContext.getCurrentActivity().startActivityForResult(intent, 1338);
     }
 
     @ReactMethod
     public void checkAccessibilitySettings(Promise promise) {
-        promise.resolve(AccessibilityServiceModule.isAccessibilityServiceEnabled(reactContext, MyAccessibilityService.class));
+        promise.resolve(
+                AccessibilityServiceModule.isAccessibilityServiceEnabled(reactContext, MyAccessibilityService.class));
     }
 
     // TODO: should be non-static
-    private static void sendEvent(
-            ReactContext reactContext,
-            String eventName,
-            @Nullable String params
-    ) {
-        reactContext
-                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(eventName, params);
+    private static void sendEvent(ReactContext reactContext, String eventName, @Nullable String params) {
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 
     // TODO: should be non-static
@@ -66,19 +58,12 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
         sendEvent(reactContext, "EventReminder", params);
     }
 
-    private static boolean isAccessibilityServiceEnabled(Context context, Class<? extends AccessibilityService> service) {
-        AccessibilityManager am = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
-        List<AccessibilityServiceInfo> enabledServices = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
+    private static boolean isAccessibilityServiceEnabled(Context context,
+            Class<? extends AccessibilityService> service) {
+        // ActivityManager queries never worked for me...
+        String settingValue = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
 
-        for (AccessibilityServiceInfo enabledService : enabledServices) {
-            ServiceInfo enabledServiceInfo = enabledService.getResolveInfo().serviceInfo;
-            if (enabledServiceInfo.packageName.equals(context.getPackageName()) && enabledServiceInfo.name.equals(service.getName())) {
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return settingValue != null && settingValue.contains(context.getPackageName() + "/" + service.getName());
     }
 }
