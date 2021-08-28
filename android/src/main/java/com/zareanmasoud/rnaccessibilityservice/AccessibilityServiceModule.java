@@ -10,6 +10,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.provider.Settings;
 import android.content.pm.ServiceInfo;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -54,7 +55,10 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
     }
 
     // TODO: should be non-static
-    public static void prepareEvent(String params) {
+    public static void prepareEvent(int keyCode) {
+        WritableMap params = Arguments.createMap();
+        params.putInt("keyCode", keyCode);
+
         sendEvent(reactContext, "BackgroundKeyPress", params);
     }
 
