@@ -51,7 +51,7 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
     }
 
     // TODO: should be non-static
-    private static void sendEvent(ReactContext reactContext, String eventName, @Nullable String params) {
+    private static void sendEvent(ReactContext reactContext, String eventName, WritableMap params) {
         reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 
