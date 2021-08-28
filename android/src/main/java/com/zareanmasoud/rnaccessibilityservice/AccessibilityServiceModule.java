@@ -55,7 +55,7 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
 
     // TODO: should be non-static
     public static void prepareEvent(String params) {
-        sendEvent(reactContext, "EventReminder", params);
+        sendEvent(reactContext, "BackgroundKeyPress", params);
     }
 
     private static boolean isAccessibilityServiceEnabled(Context context,

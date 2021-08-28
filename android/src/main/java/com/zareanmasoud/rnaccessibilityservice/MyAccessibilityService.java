@@ -8,16 +8,6 @@ import android.view.KeyEvent;
 public class MyAccessibilityService extends AccessibilityService {
 
     @Override
-    public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-        AccessibilityNodeInfo source = accessibilityEvent.getSource();
-        if (source == null) {
-            return;
-        }
-
-        AccessibilityServiceModule.prepareEvent(accessibilityEvent.toString());
-    }
-
-    @Override
     public void onInterrupt() {
         // PASS
     }
@@ -27,9 +17,7 @@ public class MyAccessibilityService extends AccessibilityService {
         int keyCode = event.getKeyCode();
 
         //handle keyevent for widnows key
-        AccessibilityServiceModule.prepareEvent("BUUUUTTTOOOONNNNPREESSSSSSS");
+        AccessibilityServiceModule.prepareEvent(keyCode);
         return super.onKeyEvent(event);
     }
-
-    
 }
