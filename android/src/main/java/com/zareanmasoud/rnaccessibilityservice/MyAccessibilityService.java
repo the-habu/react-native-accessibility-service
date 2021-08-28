@@ -8,6 +8,11 @@ import android.view.KeyEvent;
 public class MyAccessibilityService extends AccessibilityService {
 
     @Override
+    public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
+        // PASS
+    }
+
+    @Override
     public void onInterrupt() {
         // PASS
     }
