@@ -22,7 +22,10 @@ public class MyAccessibilityService extends AccessibilityService {
         int keyCode = event.getKeyCode();
 
         //handle keyevent for widnows key
-        AccessibilityServiceModule.prepareEvent(keyCode);
+        if(event.getAction() == KeyEvent.ACTION_DOWN) {
+            AccessibilityServiceModule.prepareEvent(keyCode);
+        }
+        
         return super.onKeyEvent(event);
     }
 }
