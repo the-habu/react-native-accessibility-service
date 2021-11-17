@@ -20,10 +20,11 @@ public class MyAccessibilityService extends AccessibilityService {
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
         int keyCode = event.getKeyCode();
+        int action = event.getAction();
 
         //handle keyevent for widnows key
-        if(event.getAction() == KeyEvent.ACTION_DOWN) {
-            AccessibilityServiceModule.prepareEvent(keyCode);
+        if(event.getAction() == KeyEvent.ACTION_DOWN || event.getAction() == KeyEvent.ACTION_UP) {
+            AccessibilityServiceModule.prepareEvent(keyCode, action);
         }
         
         return super.onKeyEvent(event);

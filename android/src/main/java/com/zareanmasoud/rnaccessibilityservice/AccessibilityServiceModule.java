@@ -56,9 +56,10 @@ public class AccessibilityServiceModule extends ReactContextBaseJavaModule {
     }
 
     // TODO: should be non-static
-    public static void prepareEvent(int keyCode) {
+    public static void prepareEvent(int keyCode, int action) {
         WritableMap params = Arguments.createMap();
         params.putInt("keyCode", keyCode);
+        params.putInt("action", action);
 
         sendEvent(reactContext, "BackgroundKeyPress", params);
     }
